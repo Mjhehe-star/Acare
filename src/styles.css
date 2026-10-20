@@ -1,1 +1,14 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f8f7;
+  color: #203331;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+}
