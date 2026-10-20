@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CareMate AI — Your Personal Health Companion</title>
+
+    <meta name="description" content="Your personal health companion for medications, appointments, health information, and everyday care. Designed for voice-first, multilingual, accessible healthcare management.">
+
+    <style>
+        :root {
+            --primary: #126b65;
+            --primary-dark: #0c504b;
+            --primary-light: #e6f5f1;
+            --background: #f4f8f7;
+            --surface: #ffffff;
+            --text: #203331;
+            --muted: #526561;
+            --border: #d5e3df;
+            --focus: #f2b544;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        button, a, input {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 4px solid var(--focus);
+            outline-offset: 4px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .container {
+            width: min(1080px, 92%);
+            margin: auto;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar {
+            min-height: 82px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .brand-name {
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .brand-tagline {
+            display: block;
+            color: var(--muted);
+            font-size: 0.76rem;
+        }
+
+        .language-button {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+        }
+
+        main {
+            padding: 36px 0 60px;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .welcome-label {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.82rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin: 16px 0 8px;
+            font-size: clamp(2.1rem, 5vw, 3.2rem);
+            letter-spacing: -1.2px;
+            line-height: 1.15;
+        }
+
+        .welcome p {
+            margin: 0 auto;
+            max-width: 590px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        /* Main voice-first interaction */
+
+        .voice-panel {
+            max-width: 760px;
+            margin: auto;
+            padding: 32px 24px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: var(--surface);
+            box-shadow: 0 12px 35px rgba(18, 75, 67, 0.07);
+            text-align: center;
+        }
+
+        .assistant-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            color: var(--primary-dark);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #2c9772;
+        }
+
+        .voice-heading {
+            margin: 12px 0 4px;
+            font-size: clamp(1.55rem, 4vw, 2rem);
+            line-height: 1.3;
+        }
+
+        .voice-description {
+            margin: 0 auto 22px;
+            max-width: 480px;
+            color: var(--muted);
+        }
+
+        .voice-button {
+            width: 184px;
+            height: 184px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin: 0 auto;
+            border: 8px solid var(--primary-light);
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 7px 0 rgba(18, 107, 101, 0.12);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .voice-button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.03);
+        }
+
+        .voice-button:active {
+            transform: scale(0.98);
+        }
+
+        .microphone {
+            font-size: 53px;
+            line-height: 1.2;
+        }
+
+        .voice-button-label {
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+
+        .voice-instruction {
+            margin: 19px 0 5px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .voice-caption {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .mockup-notice {
+            display: inline-block;
+            margin-top: 17px;
+            padding: 6px 11px;
+            border-radius: 8px;
+            background: #f2f3f3;
+            color: #4e5957;
+            font-size: 0.76rem;
+        }
+
+        .response {
+            min-height: 28px;
+            margin: 12px 0 0;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Secondary navigation */
+
+        .quick-actions {
+            margin-top: 38px;
+        }
+
+        .section-heading {
+            margin: 0 0 5px;
+            font-size: 1.45rem;
+            text-align: center;
+        }
+
+        .section-description {
+            margin: 0 auto 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .action-card {
+            min-height: 145px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--surface);
+            color: var(--text);
+            text-align: left;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 30px;
+        }
+
+        .action-title {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: bold;
+        }
+
+        .action-description {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .accessibility-note {
+            max-width: 760px;
+            margin: 30px auto 0;
+            padding: 17px 20px;
+            border-left: 5px solid var(--primary);
+            border-radius: 8px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            padding: 24px 0;
+            border-top: 1px solid var(--border);
+            background: white;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 650px) {
+            html {
+                font-size: 17px;
+            }
+
+            main {
+                padding-top: 28px;
+            }
+
+            .navbar {
+                min-height: 72px;
+            }
+
+            .brand-tagline {
+                max-width: 190px;
+            }
+
+            .voice-panel {
+                padding: 27px 17px;
+            }
+
+            .voice-button {
+                width: 165px;
+                height: 165px;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-card {
+                min-height: 110px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container navbar" aria-label="Main navigation">
+            <a class="brand" href="#" aria-label="CareMate AI home">
+                <span class="brand-icon" aria-hidden="true">✚</span>
+                <span>
+                    <span class="brand-name">CareMate AI</span>
+                    <span class="brand-tagline">Your health, your companion.</span>
+                </span>
+            </a>
+
+            <button class="language-button" type="button"
+                    onclick="showMockupMessage('Language selection is a mockup and is not connected yet.')">
+                🌐 English ▾
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="welcome" aria-labelledby="welcome-title">
+            <span class="welcome-label">YOUR PERSONAL HEALTH COMPANION</span>
+            <h1 id="welcome-title">Hello! How can I help you today?</h1>
+            <p>
+                Your health matters. Just speak naturally, and let your
+                personal health companion help you stay organized and
+                feel more confident about your daily care.
+            </p>
+        </section>
+
+        <section class="voice-panel" aria-labelledby="voice-heading">
+            <div class="assistant-status">
+                <span class="status-dot" aria-hidden="true"></span>
+                Your AI assistant
+            </div>
+
+            <h2 class="voice-heading" id="voice-heading">
+                I'm here to help.
+            </h2>
+
+            <p class="voice-description">
+                You don't need to type or navigate complicated menus.
+                Start with your voice, or choose a task below.
+            </p>
+
+            <button class="voice-button" type="button"
+                    aria-label="Start voice assistant, mockup only"
+                    onclick="showMockupMessage('Voice assistance is a mockup. Microphone access and speech recognition are not implemented yet.')">
+                <span class="microphone" aria-hidden="true">🎙</span>
+                <span class="voice-button-label">Talk to me</span>
+            </button>
+
+            <p class="voice-instruction">
+                Tap the microphone to get started
+            </p>
+
+            <p class="voice-caption">
+                Speak in your own words and at your own pace.
+            </p>
+
+            <span class="mockup-notice">
+                Prototype preview · Voice features not connected
+            </span>
+
+            <p class="response" id="response" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="quick-actions" aria-labelledby="actions-heading">
+            <h2 class="section-heading" id="actions-heading">
+                Or choose what you need
+            </h2>
+
+            <p class="section-description">
+                Your most important health tasks, all in one place.
+            </p>
+
+            <div class="action-grid">
+                <button class="action-card" type="button"
+                        onclick="showMockupMessage('Medication management is a mockup. No medication information is stored or changed.')">
+                    <span class="action-icon" aria-hidden="true">💊</span>
+                    <span class="action-title">My Medications</span>
+                    <span class="action-description">
+                        View medication schedules and reminders.
+                    </span>
+                </button>
+
+                <button class="action-card" type="button"
+                        onclick="showMockupMessage('Appointment management is a mockup. No appointments can be booked yet.')">
+                    <span class="action-icon" aria-hidden="true">📅</span>
+                    <span class="action-title">Appointments</span>
+                    <span class="action-description">
+                        Keep track of visits and upcoming checkups.
+                    </span>
+                </button>
+
+                <button class="action-card" type="button"
+                        onclick="showMockupMessage('Health information is a mockup. No medical records are connected.')">
+                    <span class="action-icon" aria-hidden="true">🩺</span>
+                    <span class="action-title">My Health</span>
+                    <span class="action-description">
+                        Organize important health information.
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <aside class="accessibility-note">
+            <strong>Made for everyone.</strong>
+            CareMate AI is designed with older adults, people with
+            visual impairments, individuals managing medical needs,
+            and family caregivers in mind. The full product will aim
+            to support voice interaction, readable text, and multiple
+            languages.
+        </aside>
+    </main>
+
+    <footer>
+        <div class="container">
+            CareMate AI · A personal health companion concept.
+            <br>
+            This prototype is not medical advice and does not provide
+            emergency assistance.
+        </div>
+    </footer>
+
+    <script>
+        /*
+         * MOCKUP ONLY:
+         * This page does not connect to an AI model, microphone,
+         * speech recognition, medical records, or appointment systems.
+         * The messages below are demonstrations of the intended UI.
+         */
+
+        function showMockupMessage(message) {
+            document.getElementById("response").textContent = message;
+        }
+    </script>
+</body>
+</html>
