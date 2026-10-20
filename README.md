@@ -1,4 +1,4 @@
-# Acare
+# CareMate
 
 This project is a working React + Vite app for a health companion interface called CareMate AI.
 
